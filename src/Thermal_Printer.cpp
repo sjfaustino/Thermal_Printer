@@ -23,14 +23,22 @@
 //#define DEBUG_OUTPUT
 
 // Two sets of code - one for ESP32
-#ifdef HAL_ESP32_HAL_H_
 
+#ifdef HAL_ESP32_HAL_H_
+#ifdef ARDUINO_USB_DFU_ON_BOOT
+// Ugly workaround for the Arduino Nano ESP32
+#undef HAL_ESP32_HAL_H_
+// from here on down, pretend we're a Nano 33 BLE since Arduino.cc
+// re-implemented all of the ESP32 BLE support to use the ArduinoBLE lib
+#define ARDUINO_ARDUINO_NANO33BLE
+#else // normal ESP32
 #ifdef NIMBLE_SUPPORT
 #include <NimBLEDevice.h>
 #else
 #include <BLEDevice.h>
 #endif
 #endif
+#endif // Nano ESP32
 
 #if defined ( ARDUINO_ARDUINO_NANO33BLE ) || defined( ARDUINO_UNOR4_WIFI )
 #include <ArduinoBLE.h>
